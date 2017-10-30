@@ -24,7 +24,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	ball(Vec2(200.0f,500.0f))
 {
 }
 
@@ -42,4 +43,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	ball.Draw(gfx);
 }

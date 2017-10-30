@@ -316,6 +316,21 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+void Graphics::DrawCircle(const Vec2 & center, float rad, Color c)
+{
+	for (float x = center.x - rad + 1.0f; x < center.x + rad; x++)
+	{
+		for (float y = center.y - rad + 1.0f; y < center.y + rad; y++)
+		{
+			const Vec2 pos = {x,y};
+			if ((pos - center).GetLengthSq() <= rad*rad)
+			{
+				PutPixel(int(x), int(y), c);
+			}
+		}
+	}
+}
+
 
 //////////////////////////////////////////////////
 //           Graphics Exception
