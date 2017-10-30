@@ -1,4 +1,5 @@
 #include "Ball.h"
+#include <algorithm>
 
 Ball::Ball(const Vec2 & pos)
 	:
@@ -13,4 +14,9 @@ void Ball::Draw(Graphics & gfx)
 
 void Ball::Update(float dt)
 {
+	if (vel.GetLengthSq() <= maxVel*maxVel)
+	{
+		vel += acc*dt;
+	}
+	pos += vel*dt;
 }
