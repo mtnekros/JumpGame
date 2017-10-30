@@ -40,7 +40,7 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
-	ball.Update(dt);
+	ball.Update( wnd.kbd, dt);
 	ball.ClampToBottomWall( RectF(0.0f,Graphics::ScreenWidth,0.0f,Graphics::ScreenHeight) );
 }
 

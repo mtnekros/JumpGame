@@ -12,9 +12,12 @@ void Ball::Draw(Graphics & gfx) const
 	gfx.DrawCircle(pos,rad, c);
 }
 
-void Ball::Update(float dt)
+void Ball::Update( Keyboard& kbd, float dt)
 {
-
+	if (kbd.KeyIsPressed(VK_UP))
+	{
+		vel.y = upVel;
+	}
 	if (vel.GetLengthSq() <= maxVel*maxVel)
 	{
 		vel += acc*dt;

@@ -2,13 +2,14 @@
 #include "Vec2.h"
 #include "Graphics.h"
 #include "RectF.h"
+#include "Keyboard.h"
 
 class Ball
 {
 public:
 	Ball( const Vec2& pos);
 	void Draw(Graphics& gfx) const;
-	void Update( float dt );
+	void Update( Keyboard& kbd, float dt );
 	void ClampToBottomWall( const RectF& walls );
 	RectF GetRect() const;
 private:
@@ -17,6 +18,7 @@ private:
 	Vec2 acc = { 0.0f, 180.0f };
 	static constexpr float rad = 20.0f;
 	static constexpr float maxVel = 300.0f;
+	static constexpr float upVel = -200.0f; // vel.y to be assigned when up is pressed
 	static constexpr Color c = Colors::White;
 
 
