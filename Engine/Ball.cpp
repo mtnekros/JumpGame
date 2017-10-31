@@ -14,9 +14,20 @@ void Ball::Draw(Graphics & gfx) const
 
 void Ball::Update( Keyboard& kbd, float dt)
 {
-	if (kbd.KeyIsPressed(VK_UP))
+	while ( !kbd.KeyIsEmpty() )
 	{
-		vel.y = upVel;
+		const Keyboard::Event e = kbd.ReadKey();
+		
+		if ( e.IsPress() && e.GetCode() == VK_UP)
+		{
+			if (jumpCounter < maxJumps ) //checks to see if we've jumped more than the maxjumps 
+			{
+				vel.y = upVel;
+				jumpCounter++;
+			}
+		}
+		
+		 
 	}
 	if (kbd.KeyIsPressed(VK_DOWN))
 	{
@@ -42,11 +53,19 @@ void Ball::ClampToWall(const RectF & walls)
 		pos.y += (walls.top - rect.top); // repositioning to the bottom
 		vel.y = 0;
 	}
-	
+	CheckAndResetJumpCounter( walls.bottom );// to reset the jumpCounter to zero every time the ball hits the ground
 }
 
 RectF Ball::GetRect() const
 {
 	const Vec2 half = Vec2(rad, rad);
 	return RectF( pos - half, pos + half);
+}
+
+void Ball::CheckAndResetJumpCounter( float bottomWall )
+{
+	if (pos.y + rad >= bottomWall)
+	{
+		jumpCounter = 0;
+	}
 }

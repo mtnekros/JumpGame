@@ -21,12 +21,17 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
-	ball(Vec2(200.0f,50.0f))
+	wnd(wnd),
+	gfx(wnd),
+	ball(Vec2(200.0f, 50.0f)),
+	walls(0.0f, float(Graphics::ScreenWidth)-100.0f, 0.0f, float(Graphics::ScreenHeight)-100.0f)
 {
+	for (int i = 0; i < nObstacles; i++)
+	{
+		obstacle[i] = Obstacle(walls);
+	}
 }
 
 void Game::Go()
@@ -41,10 +46,25 @@ void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
 	ball.Update( wnd.kbd, dt);
-	ball.ClampToWall( RectF(0.0f,Graphics::ScreenWidth,0.0f,Graphics::ScreenHeight) );
+	ball.ClampToWall( walls );
+	for ( Obstacle& ob : obstacle )
+	{
+		ob.Update(dt);
+	}
+	for (Obstacle& ob : obstacle)
+	{
+		if (ob.GetRect().right < walls.left)
+		{
+			ob.Respawn(walls);
+		}
+	}
 }
 
 void Game::ComposeFrame()
 {
 	ball.Draw(gfx);
+	for (Obstacle& ob : obstacle)
+	{
+		ob.Draw(gfx, walls);
+	}
 }

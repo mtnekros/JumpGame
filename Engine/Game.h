@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Ball.h"
 #include "FrameTimer.h"
+#include "Obstacle.h"
 
 class Game
 {
@@ -44,7 +45,11 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	static constexpr int nObstacles = 2;
 	Ball ball;
 	FrameTimer ft;
+	RectF walls;
+	Obstacle obstacle[nObstacles];
+	
 	/********************************/
 };
