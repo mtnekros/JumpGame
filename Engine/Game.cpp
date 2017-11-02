@@ -20,51 +20,87 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include <assert.h>
+#include <algorithm>
+#include <random>
 
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
 	ball(Vec2(200.0f, 50.0f)),
-	walls(0.0f, float(Graphics::ScreenWidth)-100.0f, 0.0f, float(Graphics::ScreenHeight)-100.0f)
+	walls(0.0f, float(Graphics::ScreenWidth), 150.0f, float(Graphics::ScreenHeight)-200.0f)
 {
+	std::random_device rd;
+	std::mt19937 rng( rd() );
+	std::uniform_real_distribution<float> gapBetweenObs(300.0f, 500.0f);
+	float xStart = walls.right;
 	for (int i = 0; i < nObstacles; i++)
 	{
-		obstacle[i] = Obstacle(walls);
+		obstacle[i] = Obstacle(walls,xStart);
+		
+		xStart += gapBetweenObs(rng);
 	}
 }
 
 void Game::Go()
 {
 	gfx.BeginFrame();	
-	UpdateModel();
+	float elapsedTime = ft.Mark();
+	while (elapsedTime > 0)
+	{
+		float dt = std::min(.0025f,elapsedTime);
+		UpdateModel( dt );
+		elapsedTime -= .0025f;
+	}
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel( float dt )
 {
-	const float dt = ft.Mark();
-	ball.Update( wnd.kbd, dt);
-	ball.ClampToWall( walls );
-	for ( Obstacle& ob : obstacle )
+	if (!gameIsOver)
 	{
-		ob.Update(dt);
-	}
-	for (Obstacle& ob : obstacle)
-	{
-		if (ob.GetRect().right < walls.left)
+		ball.Update(wnd.kbd, dt);
+		ball.ClampToWall(walls);
+		for (Obstacle& ob : obstacle)
 		{
-			ob.Respawn(walls);
+			ob.Update(dt);
+
+			if (ob.GetRect().IsOverlappingWith(ball.GetRect()))
+			{
+				gameIsOver = true;
+			}
+			if (ob.GetRect().right < walls.left)
+			{
+				std::random_device rd;
+				std::mt19937 rng( rd() );
+				std::uniform_real_distribution<float> randomizer(0.0f,100.0f);
+				ob.Respawn( walls, Graphics::ScreenWidth + randomizer(rng) ) ;
+				
+			}
 		}
+
 	}
+}
+
+void Game::DrawBorder()
+{
+	const RectF upperLine = RectF(walls.left, walls.right- 1.0f, walls.top - wallPadding, walls.top);
+	const RectF groundLine = RectF(walls.left, walls.right - 1.0f , walls.bottom, walls.bottom + wallPadding);
+	assert( upperLine.IsContainedBy(gfx.GetRect()) && groundLine.IsContainedBy(gfx.GetRect()) );
+	gfx.DrawRect(upperLine, borderColor);
+	gfx.DrawRect(groundLine, borderColor);
 }
 
 void Game::ComposeFrame()
 {
-	ball.Draw(gfx);
 	for (Obstacle& ob : obstacle)
 	{
 		ob.Draw(gfx, walls);
 	}
+	ball.Draw(gfx);
+	
+	DrawBorder();
 }
+

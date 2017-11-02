@@ -2,13 +2,13 @@
 #include <random>
 #include <algorithm>
 
-Obstacle::Obstacle( const RectF& walls)	
+Obstacle::Obstacle( const RectF& walls, float xStart)	
 {
-	Respawn( walls );
+	Respawn( walls, xStart );
 }
 
 
-void Obstacle::Respawn(const RectF& walls)
+void Obstacle::Respawn(const RectF& walls, float xStart)
 {
 	std::random_device rd;
 	std::mt19937 rng(rd());
@@ -18,7 +18,7 @@ void Obstacle::Respawn(const RectF& walls)
 	width = width_dist(rng);
 	height = height_dist(rng);
 	
-	topLeft = Vec2(walls.right , walls.bottom - height);
+	topLeft = Vec2( xStart , walls.bottom - height);
 
 }
 
@@ -26,6 +26,7 @@ void Obstacle::Update(float dt)
 {
 	topLeft.x += vel_x*dt;
 }
+
 
 void Obstacle::Draw(Graphics & gfx, const RectF& walls)
 {

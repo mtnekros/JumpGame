@@ -36,9 +36,10 @@ public:
 	void Go();
 private:
 	void ComposeFrame();
-	void UpdateModel();
+	void UpdateModel( float dt );
 	/********************************/
 	/*  User Functions              */
+	void DrawBorder();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -49,7 +50,10 @@ private:
 	Ball ball;
 	FrameTimer ft;
 	RectF walls;
+	static constexpr float wallPadding = 20;
+	static constexpr Color borderColor = {100,10,50};
 	Obstacle obstacle[nObstacles];
+	bool gameIsOver = false;
 	
 	/********************************/
 };
