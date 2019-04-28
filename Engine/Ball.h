@@ -12,10 +12,12 @@ public:
 	void Update( Keyboard& kbd, float dt );
 	void ClampToWall( const RectF& walls );
 	RectF GetRect() const;
+	Vec2 GetCenter() const;
 private:
 	void CheckAndResetJumpCounter( float bottomWall);
-private:
+public:
 	static constexpr float rad = 25.0f;
+private:
 	static constexpr int maxJumps = 2;
 	static constexpr float maxVel = 400.0f;
 	static constexpr float upVel = -300.0f; // vel.y to be assigned when up is pressed
@@ -24,7 +26,4 @@ private:
 	Vec2 vel = { 0.0f, 0.0f };
 	Vec2 acc = { 0.0f, 400.0f };
 	int jumpCounter = 0;
-
-
-
 };

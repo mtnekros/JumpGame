@@ -29,6 +29,27 @@ bool RectF::IsOverlappingWith(const RectF& rect) const
 		top <= rect.bottom && bottom >= rect.top;
 }
 
+bool RectF::IsOverLappingWithCircle(const Vec2 & center, float rad) const
+{
+	const Vec2 half = {rad,rad};
+	const RectF rectOfCir = RectF(center-half,center+half);
+	if (IsOverlappingWith(rectOfCir))
+	{
+		for (Vec2 pos = center - half; pos.y < rectOfCir.bottom; pos.y++)
+		{
+			for (pos.x = rectOfCir.left; pos.x < rectOfCir.right; pos.x++)
+			{
+				if ( (pos-center).GetLengthSq() <= rad*rad && 
+					Contains(pos) )
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 bool RectF::IsContainedBy(const RectF & rect) const
 {
 	return top >= rect.top && bottom <= rect.bottom &&

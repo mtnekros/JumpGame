@@ -67,7 +67,7 @@ void Game::UpdateModel( float dt )
 		{
 			ob.Update(dt);
 
-			if (ob.GetRect().IsOverlappingWith(ball.GetRect()))
+			if (ob.GetRect().IsOverLappingWithCircle( ball.GetCenter() , Ball::rad ))
 			{
 				gameIsOver = true;
 			}

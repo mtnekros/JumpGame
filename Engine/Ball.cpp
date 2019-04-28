@@ -62,6 +62,11 @@ RectF Ball::GetRect() const
 	return RectF( pos - half, pos + half);
 }
 
+Vec2 Ball::GetCenter() const
+{
+	return pos;
+}
+
 void Ball::CheckAndResetJumpCounter( float bottomWall )
 {
 	if (pos.y + rad >= bottomWall)
